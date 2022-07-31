@@ -66,51 +66,6 @@ shinyApp(ui = ui, server = server)
 
 
 ## Data Extraction for plot 2
-ui <- fluidPage(
-  titlePanel("Analysis of County Business Patterns Data"),
-  selectInput("states1", "States", 
-              choices = cbp_all_merged$NAME),
-  selectInput("states2", "States", 
-              choices = cbp_all_merged$NAME),
-  selectInput("states3", "States", 
-              choices = cbp_all_merged$NAME),
-  selectInput("states4", "States", 
-              choices = cbp_all_merged$NAME),
-  selectInput("states5", "States", 
-              choices = cbp_all_merged$NAME),
-   plotOutput(outputId = "plot"))
-
-server <- function(input, output,session) {
-
-  filtered_data1 <- reactive({
-    dplyr::filter(cbp_all_merged,NAME == input$states1)
-  })
-  filtered_data2 <- reactive({
-    dplyr::filter(cbp_all_merged,NAME == input$states2)
-  })
-  filtered_data3 <- reactive({
-    dplyr::filter(cbp_all_merged,NAME == input$states3)
-  })
-  filtered_data4 <- reactive({
-    dplyr::filter(cbp_all_merged,NAME == input$states4)
-  })
-  filtered_data5 <- reactive({
-    dplyr::filter(cbp_all_merged,NAME == input$states5)
-  })
-  
-  output$plot <- renderPlot({
-    ggplot()+
-      geom_line(data=filtered_data1(),aes(x=YEAR, y=log(ESTAB)), color ="blue")+
-      geom_line(data=filtered_data2(),aes(x=YEAR, y=log(ESTAB)), color ="green")+
-      geom_line(data=filtered_data3(),aes(x=YEAR, y=log(ESTAB)), color ="red")+
-      geom_line(data=filtered_data4(),aes(x=YEAR, y=log(ESTAB)), color ="purple")+
-      geom_line(data=filtered_data5(),aes(x=YEAR, y=log(ESTAB)), color ="yellow")
-  })
-}
-
-shinyApp(ui = ui, server = server)
-
-
 
 cbp20 <- getCensus( name = "cbp" ,
                       vintage = 2020,
@@ -234,8 +189,49 @@ cbp_all_merged <- left_join(cbp_ESTAB, cbp_EMP, by = c("NAME","state","YEAR")) %
 
 
 
-
-
-
-
   
+ui <- fluidPage(
+  titlePanel("Analysis of County Business Patterns Data"),
+  selectInput("states1", "States", 
+              choices = cbp_all_merged$NAME),
+  selectInput("states2", "States", 
+              choices = cbp_all_merged$NAME),
+  selectInput("states3", "States", 
+              choices = cbp_all_merged$NAME),
+  selectInput("states4", "States", 
+              choices = cbp_all_merged$NAME),
+  selectInput("states5", "States", 
+              choices = cbp_all_merged$NAME),
+   plotOutput(outputId = "plot"))
+
+server <- function(input, output,session) {
+
+  filtered_data1 <- reactive({
+    dplyr::filter(cbp_all_merged,NAME == input$states1)
+  })
+  filtered_data2 <- reactive({
+    dplyr::filter(cbp_all_merged,NAME == input$states2)
+  })
+  filtered_data3 <- reactive({
+    dplyr::filter(cbp_all_merged,NAME == input$states3)
+  })
+  filtered_data4 <- reactive({
+    dplyr::filter(cbp_all_merged,NAME == input$states4)
+  })
+  filtered_data5 <- reactive({
+    dplyr::filter(cbp_all_merged,NAME == input$states5)
+  })
+  
+  output$plot <- renderPlot({
+    ggplot()+
+      geom_line(data=filtered_data1(),aes(x=YEAR, y=log(ESTAB)), color ="blue")+
+      geom_line(data=filtered_data2(),aes(x=YEAR, y=log(ESTAB)), color ="green")+
+      geom_line(data=filtered_data3(),aes(x=YEAR, y=log(ESTAB)), color ="red")+
+      geom_line(data=filtered_data4(),aes(x=YEAR, y=log(ESTAB)), color ="purple")+
+      geom_line(data=filtered_data5(),aes(x=YEAR, y=log(ESTAB)), color ="yellow")
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+
