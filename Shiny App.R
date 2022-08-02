@@ -232,7 +232,7 @@ server <- function(input, output, session) {
                                    YEAR >= input$year0[1] & year <= input$year0[2])
   })
   ouput$plot3 <- renderPlot({ 
-      ggplot(filtered_databarplot, mapping = aes(x = input$states6), y = fct_infreq(.data[[input$var1]])) +
+      ggplot(filtered_databarplot, mapping = aes(x = input$states6), y = fct_infreq(summarize(mean = mean(.data[[input$var1]]))) +
       geom_bar(stat = "identity") +
       coord_flip()+
       ggtitle("") +
