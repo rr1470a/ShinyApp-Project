@@ -177,6 +177,11 @@ ui <- shinyUI(navbarPage("Analysis of County Business Patterns Data",
                                                selectInput("states4", "States", choices = cbp_all_merged$NAME),
                                                selectInput("states5", "States", choices = cbp_all_merged$NAME)),
                                   mainPanel("Plot 2", plotOutput("plot2"))),
+                         tabPanel("Average Variable Summary Bar Graph",
+                                  sidebarPanel(sliderInput("year0", "Year", 2012, 2020, value = c(2012, 2020)),
+                                               selectInput("var1", "Variable", choices = colnames(cbp_all_merged[4:6])), 
+                                               #selectInput("summary", "Summary Statistic", choices = colnames(cbp_all_merged[]))),
+                                               checkboxInput("states6", "States", choices = cbp_all_merged$NAME)),
                          tabPanel("County Business Patterns Data Table, by State and Year",
                                   sidebarPanel(radioButtons("year","Choose Year:",
                                                             choices = YEARS)),
@@ -221,6 +226,25 @@ server <- function(input, output, session) {
       )
     
   })
+  
+  filtered_databarplot <- subset(cbp_all_merged,
+                                 NAME %in% input$states6 &
+                                   YEAR >= input$year0[1] & year <= input$year0[2])
+  })
+  ouput$plot3 <- renderPlot({ 
+      ggplot(filtered_databarplot, mapping = aes(x = input$states6), y = fct_infreq(.data[[input$var1]])) +
+      geom_bar(stat = "identity") +
+      coord_flip()+
+      ggtitle("") +
+      geom_label(aes(label=labels), 
+                 nudge_x = 0.25, nudge_y = 0.25, 
+                 check_overlap = T,
+                 size = 3) +
+      theme_minimal() +
+      xlab("")
+    
+  })
+
   filtered_data3 <- reactive({
     dplyr::filter(cbp_all_merged,YEAR == input$year)
   })
