@@ -4,6 +4,7 @@ library(ggplot2)
 library(censusapi)
 library(dplyr)
 library(stringr)
+library(shinyWidgets)
 
 Sys.setenv(CENSUS_KEY="2af9f600486ef6ad342ed1e8a978c0956a70a52c")
 readRenviron("~/.Renviron")
@@ -167,6 +168,10 @@ YEARS <- c("2020","2019","2018","2017","2016","2015","2014","2013","2012")
 
 
 ui <- shinyUI(navbarPage("Analysis of County Business Patterns Data",
+                         setBackgroundColor(
+                           color = c("white", "CCFFCC"),
+                           gradient = "linear",
+                           direction = "bottom"),
                          tabPanel("Boxplots of Number of Employees Hired by industry",
                                   sidebarPanel(selectInput("s1", "States", choices = cbp$state_name)),
                                   mainPanel("Plot 1", plotOutput("plot1"))),
