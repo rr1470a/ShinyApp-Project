@@ -167,9 +167,10 @@ YEARS <- c("2020","2019","2018","2017","2016","2015","2014","2013","2012")
 ##SINGLE SHINY APP WITH TABS
 
 
-ui <- shinyUI(navbarPage("Analysis of County Business Patterns Data",
+
+ui <- shinyUI(navbarPage((h4("Analysis of County Business Patterns Data", style="color:#8B0000")),
                          setBackgroundColor(
-                           color = c("white", "CCFFCC"),
+                           color = c("white", "#CCFFCC"),
                            gradient = "linear",
                            direction = "bottom"),
                          tabPanel("Boxplots of Number of Employees Hired by industry",
@@ -183,17 +184,16 @@ ui <- shinyUI(navbarPage("Analysis of County Business Patterns Data",
                                                selectInput("states5", "States", choices = cbp_all_merged$NAME)),
                                   mainPanel("Plot 2", plotOutput("plot2"))),
                          tabPanel("Average Variable Summary Bar Graph",
-                                  sidebarPanel(sliderInput("year0", "Year", 2012, 2020, value = c(2012, 2020)),
-                                               selectInput("var1", "Variable", choices = colnames(cbp_all_merged[4:6])), 
-                                               #selectInput("summary", "Summary Statistic", choices = colnames(cbp_all_merged[]))),
-                                               checkboxInput("states6", "States", choices = cbp_all_merged$NAME)),
+                                  sidebarPanel(sliderInput("year0", "Year", 2012, 2020, value = 2016),
+                                               selectInput("var1", "Variable", choices = colnames(cbp_all_merged[4:6])),
+                                               selectInput("states6", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states7", "States", choices = cbp_all_merged$NAME)),
+                                  mainPanel("Plot 3", plotOutput("plot3"))),
                          tabPanel("County Business Patterns Data Table, by State and Year",
                                   sidebarPanel(radioButtons("year","Choose Year:",
                                                             choices = YEARS)),
-                                  mainPanel(dataTableOutput("dynamic")))
-    )
-  )
-                         
+                                  mainPanel(dataTableOutput("dynamic")))))
+
 
 server <- function(input, output, session) {
   
@@ -214,7 +214,7 @@ server <- function(input, output, session) {
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
             legend.position = "none")
   })
-
+  
   filtered_data2 <- reactive({
     dplyr::filter(cbp_all_merged,
                   NAME == input$states1 | NAME == input$states2  | NAME == input$states3 | NAME == input$states4 |  NAME == input$states5)
@@ -232,24 +232,20 @@ server <- function(input, output, session) {
     
   })
   
-  filtered_databarplot <- subset(cbp_all_merged,
-                                 NAME %in% input$states6 &
-                                   YEAR >= input$year0[1] & year <= input$year0[2])
+  filtered_barplot <- reactive({
+    dplyr::filter(cbp_all_merged,
+                  NAME == input$states6 | NAME == input$states7  & YEAR == input$year0)
   })
-  ouput$plot3 <- renderPlot({ 
-      ggplot(filtered_databarplot, mapping = aes(x = input$states6), y = fct_infreq(summarize(mean = mean(.data[[input$var1]]))) +
-      geom_bar(stat = "identity") +
+  
+  output$plot3 <- renderPlot({ 
+    ggplot(filtered_barplot()) +
+      geom_bar(mapping = aes(x = NAME, y = .data[[input$var1]]),stat = "identity", fill ="#8B0000") +
       coord_flip()+
-      ggtitle("") +
-      geom_label(aes(label=labels), 
-                 nudge_x = 0.25, nudge_y = 0.25, 
-                 check_overlap = T,
-                 size = 3) +
+      ggtitle("")+
       theme_minimal() +
       xlab("")
     
   })
-
   filtered_data3 <- reactive({
     dplyr::filter(cbp_all_merged,YEAR == input$year)
   })
@@ -259,7 +255,3 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui = ui, server = server)
-
-  
-
-
