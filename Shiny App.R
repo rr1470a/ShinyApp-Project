@@ -5,6 +5,7 @@ library(censusapi)
 library(dplyr)
 library(stringr)
 library(shinyWidgets)
+library(data.table)
 
 Sys.setenv(CENSUS_KEY="2af9f600486ef6ad342ed1e8a978c0956a70a52c")
 readRenviron("~/.Renviron")
