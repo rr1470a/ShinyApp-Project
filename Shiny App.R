@@ -160,7 +160,168 @@ cbp_all_merged <- left_join(cbp_ESTAB, cbp_EMP, by = c("NAME","state","YEAR")) %
          YEAR = as.numeric(YEAR))
 
 
-## DATA FOR PLOT 3
+#DATA FOR PLOT 3
+
+cbp2020 <- getCensus( name = "cbp" ,
+                      vintage = 2020,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2017","NAICS2017_LABEL"),
+                      region = "state:*")
+cbp2020 <- cbp2020 %>% 
+  setDT() %>% 
+  filter(NAICS2017 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99")) %>% 
+  rename(ESTAB2020=ESTAB,
+         EMP2020= EMP,
+         PAYANN2020=PAYANN)
+
+cbp2019 <- getCensus( name = "cbp" ,
+                      vintage = 2019,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2017","NAICS2017_LABEL"),
+                      region = "state:*")
+cbp2019 <- cbp2019 %>% 
+  setDT() %>% 
+  filter(NAICS2017 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99"))%>% 
+  rename(ESTAB2019=ESTAB,
+         EMP2019= EMP,
+         PAYANN2019=PAYANN)
+
+cbp2018 <- getCensus( name = "cbp" ,
+                      vintage = 2018,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2017","NAICS2017_LABEL"),
+                      region = "state:*")
+cbp2018 <- cbp2018 %>% 
+  setDT() %>% 
+  filter(NAICS2017 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99")) %>% 
+  rename(ESTAB2018=ESTAB,
+         EMP2018= EMP,
+         PAYANN2018=PAYANN)
+
+cbp2017 <- getCensus( name = "cbp" ,
+                      vintage = 2017,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2017","NAICS2017_LABEL"),
+                      region = "state:*")
+cbp2017 <- cbp2017 %>% 
+  setDT() %>% 
+  filter(NAICS2017 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99"))%>% 
+  rename(ESTAB2017=ESTAB,
+         EMP2017= EMP,
+         PAYANN2017=PAYANN)
+
+cbp2016 <- getCensus( name = "cbp" ,
+                      vintage = 2016,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2012","NAICS2012_TTL"),
+                      region = "state:*")
+cbp2016 <- cbp2016 %>% 
+  setDT() %>% 
+  filter(NAICS2012 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99"))%>% 
+  rename(ESTAB2016=ESTAB,
+         EMP2016= EMP,
+         PAYANN2016=PAYANN,
+         NAICS2017=NAICS2012,
+         NAICS2017_LABEL=NAICS2012_TTL)
+
+cbp2015 <- getCensus( name = "cbp" ,
+                      vintage = 2015,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2012","NAICS2012_TTL"),
+                      region = "state:*")
+cbp2015 <- cbp2015 %>% 
+  setDT() %>% 
+  filter(NAICS2012 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99"))%>% 
+  rename(ESTAB2015=ESTAB,
+         EMP2015= EMP,
+         PAYANN2015=PAYANN,
+         NAICS2017=NAICS2012,
+         NAICS2017_LABEL=NAICS2012_TTL)
+
+cbp2014 <- getCensus( name = "cbp" ,
+                      vintage = 2014,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2012","NAICS2012_TTL"),
+                      region = "state:*")
+cbp2014 <- cbp2014 %>% 
+  setDT() %>% 
+  filter(NAICS2012 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99")) %>% 
+  rename(ESTAB2014=ESTAB,
+         EMP2014= EMP,
+         PAYANN2014=PAYANN,
+         NAICS2017=NAICS2012,
+         NAICS2017_LABEL=NAICS2012_TTL)
+
+cbp2013 <- getCensus( name = "cbp" ,
+                      vintage = 2013,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2012","NAICS2012_TTL"),
+                      region = "state:*")
+cbp2013 <- cbp2013 %>% 
+  setDT() %>% 
+  filter(NAICS2012 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99"))%>% 
+  rename(ESTAB2013=ESTAB,
+         EMP2013= EMP,
+         PAYANN2013=PAYANN,
+         NAICS2017=NAICS2012,
+         NAICS2017_LABEL=NAICS2012_TTL)
+
+cbp2012 <- getCensus( name = "cbp" ,
+                      vintage = 2012,
+                      key = Sys.getenv("CENSUS_KEY"),
+                      vars = c("NAME","ESTAB","EMP","PAYANN","NAICS2012","NAICS2012_TTL"),
+                      region = "state:*")
+cbp2012 <- cbp2012 %>% 
+  data.table() %>% 
+  filter(NAICS2012 %in% c("11","21","22","23","31","42","44","48","51","52","53","54","55","56","61","62","71","72", "81","99"))%>% 
+  rename(ESTAB2012=ESTAB,
+         EMP2012= EMP,
+         PAYANN2012=PAYANN,
+         NAICS2017=NAICS2012,
+         NAICS2017_LABEL=NAICS2012_TTL)
+
+cbp_all_industry <- merge(cbp2020, cbp2019, by = c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2018, by=c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2017, by=c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2016, by=c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2015, by=c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2014, by=c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2013, by=c("NAME","state","NAICS2017","NAICS2017_LABEL")) %>% 
+  merge(., cbp2012, by=c("NAME","state","NAICS2017","NAICS2017_LABEL"))
+
+cbp_ESTAB_industry <- cbp_all_industry %>% 
+  select(NAME, NAICS2017_LABEL, contains("ESTAB")) %>% 
+  pivot_longer(
+    cols = contains("ESTAB"),
+    names_to = "YEAR",
+    names_prefix = "ESTAB",
+    values_to = "ESTAB"
+  )
+
+cbp_EMP_industry <- cbp_all_industry %>% 
+  select(NAME, NAICS2017_LABEL, contains("EMP")) %>% 
+  pivot_longer(
+    cols = contains("EMP"),
+    names_to = "YEAR",
+    names_prefix = "EMP",
+    values_to = "EMP"
+  )
+
+cbp_PAYANN_industry <- cbp_all_industry %>% 
+  select(NAME, NAICS2017_LABEL, contains("PAYANN")) %>% 
+  pivot_longer(
+    cols = contains("PAYAN"),
+    names_to = "YEAR",
+    names_prefix = "PAYANN",
+    values_to = "PAYANN"
+  )
+
+cbp_all_merged_industry <- left_join(cbp_ESTAB_industry, cbp_EMP_industry, by = c("NAME","NAICS2017_LABEL","YEAR")) %>% 
+  left_join(., cbp_PAYANN_industry, by=c("NAME","NAICS2017_LABEL","YEAR")) %>% 
+  mutate(YEAR = as.numeric(YEAR)) %>% 
+  rename(Industry=NAICS2017_LABEL)
+  
+## DATA FOR PLOT 4
 YEARS <- c("2020","2019","2018","2017","2016","2015","2014","2013","2012")
 
 
@@ -183,11 +344,12 @@ ui <- shinyUI(navbarPage((h4("Analysis of County Business Patterns Data", style=
                                                selectInput("states4", "States", choices = cbp_all_merged$NAME),
                                                selectInput("states5", "States", choices = cbp_all_merged$NAME)),
                                   mainPanel("Plot 2", plotOutput("plot2"))),
-                         tabPanel("Average Variable Summary Bar Graph",
+                         tabPanel("Summary Bar Graph",
                                   sidebarPanel(sliderInput("year0", "Year", 2012, 2020, value = 2016),
-                                               selectInput("var1", "Variable", choices = colnames(cbp_all_merged[4:6])),
-                                               selectInput("states6", "States", choices = cbp_all_merged$NAME),
-                                               selectInput("states7", "States", choices = cbp_all_merged$NAME)),
+                                               selectInput("var1", "Variable", choices = colnames(cbp_all_merged_industry[4:6])),
+                                               selectInput("states6", "States", choices = cbp_all_merged_industry$NAME),
+                                               selectInput("states7", "States", choices = cbp_all_merged_industry$NAME),
+                                               selectInput("industry", "Industry", choices = cbp_all_merged_industry$Industry)),
                                   mainPanel("Plot 3", plotOutput("plot3"))),
                          tabPanel("County Business Patterns Data Table, by State and Year",
                                   sidebarPanel(radioButtons("year","Choose Year:",
@@ -233,8 +395,8 @@ server <- function(input, output, session) {
   })
   
   filtered_barplot <- reactive({
-    dplyr::filter(cbp_all_merged,
-                  NAME == input$states6 | NAME == input$states7  & YEAR == input$year0)
+    dplyr::filter(cbp_all_merged_industry,
+                  NAME == input$states6 | NAME == input$states7  & YEAR == input$year0 & Industry == input$industry)
   })
   
   output$plot3 <- renderPlot({ 
