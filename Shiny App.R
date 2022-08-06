@@ -418,3 +418,168 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui = ui, server = server)
+
+############# newer version: with bar graph fixed########
+
+ui <- shinyUI(navbarPage("Analysis of County Business Patterns Data",
+                         tabPanel("Boxplots of Number of Employees Hired by industry",
+                                  sidebarPanel(selectInput("s1", "States", choices = cbp$state_name)),
+                                  mainPanel("Plot 1", plotOutput("plot1"))),
+                         tabPanel("Time Series of Number of Establishments by State",
+                                  sidebarPanel(selectInput("states1", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states2", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states3", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states4", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states5", "States", choices = cbp_all_merged$NAME)),
+                                  mainPanel("Plot 2", plotOutput("plot2"))),
+                         tabPanel("County Business Patterns Data Table, by State and Year",
+                                  sidebarPanel(radioButtons("year","Choose Year:",
+                                                            choices = YEARS)),
+                                  mainPanel(dataTableOutput("dynamic")))
+)
+)
+
+
+server <- function(input, output, session) {
+  
+  filtered_data1 <- reactive({
+    dplyr::filter(cbp,state_name == input$s1)
+  })
+  
+  output$plot1 <- renderPlot({
+    ggplot(filtered_data1())+
+      geom_boxplot(aes(x=NAICS2017_LABEL, y= log(EMP)))+
+      geom_point(aes(x=NAICS2017_LABEL, y= log(EMP), fill = log(EMP)),
+                 position=position_jitterdodge(),
+                 alpha = 0.5)+
+      labs(title = "Number of Employees Hired in DMV by industry",
+           subtitle = "Points on the boxplots represent counties",
+           y = "Log of Number of Employees",
+           x = NULL)+
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+            legend.position = "none")
+  })
+  
+  filtered_data2 <- reactive({
+    dplyr::filter(cbp_all_merged,
+                  NAME == input$states1 | NAME == input$states2  | NAME == input$states3 | NAME == input$states4 |  NAME == input$states5)
+  })
+  
+  output$plot2 <- renderPlot({
+    ggplot()+
+      geom_line(data=filtered_data2(),aes(x=YEAR, y=log(ESTAB), group= NAME, color = NAME))+
+      guides(color=guide_legend(title="States"))+
+      theme_minimal()+
+      labs(
+        title = "Number of Establishmenst in the US, by state over the years 2012-2020",
+        y = "log of Number of Establishments"
+      )
+    
+  })
+  filtered_data3 <- reactive({
+    dplyr::filter(cbp_all_merged,YEAR == input$year)
+  })
+  output$dynamic <- renderDataTable({
+    filtered_data3()
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+#### troubleshooted version
+
+
+ui <- shinyUI(navbarPage((h4("Analysis of County Business Patterns Data", style="color:#8B0000")),
+                         setBackgroundColor(
+                           color = c("white", "#CCFFCC"),
+                           gradient = "linear",
+                           direction = "bottom"),
+                         tabPanel("Boxplots of Number of Employees Hired by industry",
+                                  sidebarPanel(selectInput("s1", "States", choices = cbp$state_name)),
+                                  mainPanel("Plot 1", plotOutput("plot1"))),
+                         tabPanel("Time Series of Number of Establishments by State",
+                                  sidebarPanel(selectInput("states1", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states2", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states3", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states4", "States", choices = cbp_all_merged$NAME),
+                                               selectInput("states5", "States", choices = cbp_all_merged$NAME)),
+                                  mainPanel("Plot 2", plotOutput("plot2"))),
+                         tabPanel("Summary Bar Graph",
+                                  sidebarPanel(selectInput("year", "YEAR", choices = cbp_all_merged_industry$YEAR),
+                                               selectInput("var1", "Variable", choices = colnames(cbp_all_merged_industry[4:6])),
+                                               selectInput("states6", "States", choices = cbp_all_merged_industry$NAME),
+                                               selectInput("states7", "States", choices = cbp_all_merged_industry$NAME),
+                                               selectInput("industry", "Industry", choices = cbp_all_merged_industry$Industry)),
+                                  mainPanel("Plot 3", plotOutput("plot3"))),
+                         tabPanel("County Business Patterns Data Table, by State and Year",
+                                  sidebarPanel(radioButtons("year","Choose Year:",
+                                                            choices = YEARS)),
+                                  mainPanel(dataTableOutput("dynamic")))))
+
+
+server <- function(input, output, session) {
+  
+  filtered_data1 <- reactive({
+    dplyr::filter(cbp,state_name == input$s1)
+  })
+  
+  output$plot1 <- renderPlot({
+    ggplot(filtered_data1())+
+      geom_boxplot(aes(x=NAICS2017_LABEL, y= log(EMP)))+
+      geom_point(aes(x=NAICS2017_LABEL, y= log(EMP), fill = log(EMP)),
+                 position=position_jitterdodge(),
+                 alpha = 0.5)+
+      labs(title = "Number of Employees Hired, by industry",
+           subtitle = "Points on the boxplots represent counties",
+           y = "Log of Number of Employees",
+           x = NULL)+
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+            legend.position = "none")
+  })
+  
+  filtered_data2 <- reactive({
+    dplyr::filter(cbp_all_merged,
+                  NAME == input$states1 | NAME == input$states2  | NAME == input$states3 | NAME == input$states4 |  NAME == input$states5)
+  })
+  
+  output$plot2 <- renderPlot({
+    ggplot()+
+      geom_line(data=filtered_data2(),aes(x=YEAR, y=ESTAB, group= NAME, color = NAME))+
+      guides(color=guide_legend(title="States"))+
+      theme_minimal()+
+      labs(
+        title = "Number of Establishmenst in the US, by state over the years 2012-2020",
+        y = "log of Number of Establishments"
+      )
+    
+  })
+  
+  filtered_barplot <- reactive({
+    dplyr::filter(cbp_all_merged_industry,
+                  NAME == input$states6  | NAME == input$states7 & YEAR == input$year & Industry == input$industry)
+  })
+  
+  output$plot3 <- renderPlot({ 
+    ggplot(filtered_barplot()) +
+      geom_col(aes(x = .data[[input$var1]], y = NAME, fill= NAME), position = "dodge") +
+      ggtitle("")+
+      theme_minimal() +
+      xlab("")
+    
+  })
+  
+ 
+
+  filtered_data3 <- reactive({
+    dplyr::filter(cbp_all_merged,YEAR == input$year)
+  })
+  output$dynamic <- renderDataTable({
+    filtered_data3()
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+
+
+
